@@ -1,19 +1,54 @@
 package chen.tools;
 
-// 按两次 Shift 打开“随处搜索”对话框并输入 `show whitespaces`，
-// 然后按 Enter 键。现在，您可以在代码中看到空格字符。
+import org.apache.commons.io.FileUtils;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.time.temporal.ChronoUnit;
+import java.util.Base64;
+
+
 public class Main {
-    public static void main(String[] args) {
-        // 当文本光标位于高亮显示的文本处时按 Alt+Enter，
-        // 可查看 IntelliJ IDEA 对于如何修正该问题的建议。
-        System.out.print("Hello and welcome!");
+    public static void main(String[] args) throws Exception {
 
-        // 按 Shift+F10 或点击间距中的绿色箭头按钮以运行脚本。
-        for (int i = 1; i <= 5; i++) {
+        String basePath="E:\\ideame";
+        RSAKeyAndCertificateGenerator rsaKeyAndCertificateGenerator = new RSAKeyAndCertificateGenerator();
 
-            // 按 Shift+F9 开始调试代码。我们已为您设置了一个断点，
-            // 但您始终可以通过按 Ctrl+F8 添加更多断点。
-            System.out.println("i = " + i);
-        }
+        String configBasePath="E:\\ideame"+File.separator+"idea"+File.separator+"config-jetbrains"+File.separator;
+        String generate = rsaKeyAndCertificateGenerator.saveFile(basePath, ChronoUnit.YEARS, 10);
+        System.out.println(generate);
+
+        boolean b = rsaKeyAndCertificateGenerator.genPowerPluginConfigFile(basePath,configBasePath);
+        System.out.println(b);
+
+        LicenseUtil licenseUtil = new LicenseUtil();
+        String activeCode = licenseUtil.getActiveCode(basePath ,"chen", "2099-12-12");
+        FileUtils.write(new File(basePath + File.separator + "activeCode.txt"), activeCode, StandardCharsets.UTF_8);
+        System.out.println(activeCode);
+
+        //test(basePath + File.separator + "activeCode.txt");
+
+    }
+
+    public static void test(String filePath) throws Exception {
+        String activeCode = FileUtils.readFileToString(new File(filePath), StandardCharsets.UTF_8);
+        String[] licenseParts = activeCode.split("-");
+        String licensePartBase64 = licenseParts[1];
+        final String signatureBase64 = licenseParts[2];
+        final String certBase64 = licenseParts[3];
+
+        System.out.println(new String(Base64.getDecoder().decode(licensePartBase64), StandardCharsets.UTF_8));
+
+        byte[] binaryCertificate = Base64.getDecoder().decode(certBase64);
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        X509Certificate cert = (X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(binaryCertificate));
+        System.out.println(cert);
+
+
+
     }
 }

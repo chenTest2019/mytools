@@ -2,10 +2,13 @@ package chen.tools;
 
 import com.alibaba.fastjson2.JSONObject;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.bouncycastle.util.io.pem.PemObject;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.CertificateException;
@@ -18,21 +21,22 @@ import java.util.Base64;
 import java.util.List;
 
 public class LicenseUtil {
-    private final String separator="-";
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
     private static final RSAKeyAndCertificateGenerator rsaKeyAndCertificateGenerator
             = new RSAKeyAndCertificateGenerator();
+    private final String separator = "-";
 
-    public String getActiveCode(String basePath,String licenseeName, String expireDate){
+    public String getActiveCode(String basePath, String licenseeName, String expireDate) {
         License license = getLicense(licenseeName, expireDate);
         try {
-            return getActiveCode(basePath+ File.separator+RSAKeyAndCertificateGenerator.CRT_FILE,
-                    basePath+ File.separator+RSAKeyAndCertificateGenerator.KEY_FILE, license);
+            return getActiveCode(basePath + File.separator + RSAKeyAndCertificateGenerator.CRT_FILE,
+                    basePath + File.separator + RSAKeyAndCertificateGenerator.KEY_FILE, license);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-    private String getActiveCode(String certFile, String keyFile,String licenseeName, String expireDate){
+
+    private String getActiveCode(String certFile, String keyFile, String licenseeName, String expireDate) {
         License license = getLicense(licenseeName, expireDate);
         try {
             return getActiveCode(certFile, keyFile, license);
@@ -40,15 +44,18 @@ public class LicenseUtil {
             throw new RuntimeException(e);
         }
     }
+
     /**
      * 生成licenseId
+     *
      * @return
      */
     private String getLicenseId() {
         return RandomStringUtils.randomAlphabetic(10).toUpperCase();
     }
-    private License getLicense(String licenseeName, String expireDate){
-        License license =  License.builder().build();
+
+    private License getLicense(String licenseeName, String expireDate) {
+        License license = License.builder().build();
         license.setLicenseId(getLicenseId());
         license.setLicenseeName(licenseeName);
         List<Product> products = new ArrayList<>();
@@ -102,5 +109,14 @@ public class LicenseUtil {
         }
         return licenseId + separator + BASE64_ENCODER.encodeToString(licenseBytes) +
                 separator + BASE64_ENCODER.encodeToString(signature) + separator + certStr;
+    }
+
+    PrivateKey getPrivateKey() throws Exception {
+        Security.addProvider(new BouncyCastleProvider());
+        PEMParser pemParser = new PEMParser(new FileReader("ca.key"));
+        JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
+        Object object = pemParser.readObject();
+        KeyPair kp = converter.getKeyPair((PEMKeyPair) object);
+        return kp.getPrivate();
     }
 }

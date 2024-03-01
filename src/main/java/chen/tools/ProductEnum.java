@@ -1,8 +1,9 @@
 package chen.tools;
 
-import lombok.Data;
+import lombok.Getter;
 
 
+@Getter
 public enum ProductEnum {
     PhpStorm("PS"),
     Pycharm("PC"),
@@ -19,11 +20,9 @@ public enum ProductEnum {
     Datagrip("DB"),
     Appcode("AC"),
     CodeWithMe("PCWMP");
-    private String code;
+    private final String code;
+
     ProductEnum(String code) {
         this.code = code;
-    }
-    public String getCode() {
-        return code;
     }
 }

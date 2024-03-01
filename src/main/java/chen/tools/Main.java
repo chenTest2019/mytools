@@ -5,7 +5,6 @@ import org.apache.commons.io.FileUtils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.time.temporal.ChronoUnit;
@@ -15,18 +14,18 @@ import java.util.Base64;
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        String basePath="E:\\ideame";
+        String basePath = "E:\\ideame";
         RSAKeyAndCertificateGenerator rsaKeyAndCertificateGenerator = new RSAKeyAndCertificateGenerator();
 
-        String configBasePath="E:\\ideame"+File.separator+"idea"+File.separator+"config-jetbrains"+File.separator;
-        String generate = rsaKeyAndCertificateGenerator.saveFile(basePath, ChronoUnit.YEARS, 10);
-        System.out.println(generate);
-
-        boolean b = rsaKeyAndCertificateGenerator.genPowerPluginConfigFile(basePath,configBasePath);
-        System.out.println(b);
+//        String configBasePath = "E:\\ideame" + File.separator + "idea" + File.separator + "config-jetbrains" + File.separator;
+//        String generate = rsaKeyAndCertificateGenerator.saveFile(basePath, ChronoUnit.YEARS, 10);
+//        System.out.println(generate);
+//
+//        boolean b = rsaKeyAndCertificateGenerator.genPowerPluginConfigFile(basePath, configBasePath);
+//        System.out.println(b);
 
         LicenseUtil licenseUtil = new LicenseUtil();
-        String activeCode = licenseUtil.getActiveCode(basePath ,"chen", "2099-12-12");
+        String activeCode = licenseUtil.getActiveCode(basePath, "chen", "2099-12-12");
         FileUtils.write(new File(basePath + File.separator + "activeCode.txt"), activeCode, StandardCharsets.UTF_8);
         System.out.println(activeCode);
 
@@ -47,7 +46,6 @@ public class Main {
         CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
         X509Certificate cert = (X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(binaryCertificate));
         System.out.println(cert);
-
 
 
     }

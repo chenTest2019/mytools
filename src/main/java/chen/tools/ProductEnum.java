@@ -19,6 +19,8 @@ public enum ProductEnum {
     Rider("RD"),
     Datagrip("DB"),
     Appcode("AC"),
+    //https://plugins.jetbrains.com/plugin/8286-sequencediagram/pricing#tabs
+    Sequencediagram("PSEQUENCEDIAGRA"),
     CodeWithMe("PCWMP");
     private final String code;
 

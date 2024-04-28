@@ -9,16 +9,13 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <lombok.version>1.18.30</lombok.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk18on</artifactId>
-            <version>1.77</version>
-        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -38,13 +35,64 @@
             <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
+
+
         <!-- https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
             <version>2.0.47</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>23.0.0</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.13.0</version>
+            <configuration>
 
+                <fork>true</fork>
+                <debug>true</debug>
+                <encoding>${project.build.sourceEncoding}</encoding>
+                <source>${maven.compiler.source}</source>
+                <target>${maven.compiler.target}</target>
+
+                <!--增加了 module-info.java后 加了lombok的Data注解后的类 在编译时提示找不到符号
+                    所以这里需要增加lombok的注解处理器(IDE里面的配置不生效？！！)-->
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>${lombok.version}</version>
+                    </path>
+                </annotationProcessorPaths>
+                <!--compilerArgument>-XDignore.symbol.file</compilerArgument>-->
+                <compilerArgs>
+                    <arg>--add-exports=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED</arg>
+                    <arg>--add-exports=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED</arg>
+                    <arg>--add-exports=java.base/jdk.internal.org.objectweb.asm.util=ALL-UNNAMED</arg>
+                    <arg>--add-exports=java.base/jdk.internal.reflect=ALL-UNNAMED</arg>
+                    <arg>--add-exports=java.base/sun.net.www.http.HttpClient=ALL-UNNAMED</arg>
+                    <arg>--add-exports=java.management/sun.management=ALL-UNNAMED</arg>
+                    <arg>--add-exports=java.base/sun.security.x509=ALL-UNNAMED</arg>
+                    <arg>--add-exports=java.base/sun.security.util=ALL-UNNAMED</arg>
+                    <arg>--add-exports=java.base/sun.security.rsa=ALL-UNNAMED</arg>
+                </compilerArgs>
+                <compilerArguments>
+
+                </compilerArguments>
+
+
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
 </project>

@@ -1,4 +1,4 @@
-package chen.tools;
+package chen.tools.jetbrains.generator;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

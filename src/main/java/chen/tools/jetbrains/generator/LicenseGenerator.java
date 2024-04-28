@@ -1,8 +1,5 @@
-package chen.tools.generator;
+package chen.tools.jetbrains.generator;
 
-import chen.tools.License;
-import chen.tools.Product;
-import chen.tools.ProductEnum;
 import com.alibaba.fastjson2.JSONObject;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -11,17 +8,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.cert.X509Certificate;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
-import static chen.tools.generator.CertificateGenerator.*;
-
 
 
 public class LicenseGenerator {
@@ -76,10 +68,10 @@ public class LicenseGenerator {
     private static String getActiveCode(String certFile, String keyFile, License license)
             throws Exception {
 
-        X509Certificate cert = loadX509CertificateFromFile(certFile);
+        X509Certificate cert = CertificateGenerator.loadX509CertificateFromFile(certFile);
         byte[] certBytes = cert.getEncoded();
         String certStr = BASE64_ENCODER.encodeToString(certBytes);
-        PrivateKey priKey = loadPrivateKeyFromPEMFile(keyFile, "RSA");
+        PrivateKey priKey = CertificateGenerator.loadPrivateKeyFromPEMFile(keyFile, "RSA");
 
 
         String licenseId = license.getLicenseId();

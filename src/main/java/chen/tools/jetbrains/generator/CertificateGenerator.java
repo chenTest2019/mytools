@@ -1,4 +1,4 @@
-package chen.tools.generator;
+package chen.tools.jetbrains.generator;
 
 
 import sun.security.x509.*;

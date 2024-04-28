@@ -1,4 +1,4 @@
-package chen.tools;
+package chen.tools.jrebel;
 
 import javax.swing.*;
 import java.awt.*;

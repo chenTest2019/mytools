@@ -1,4 +1,4 @@
-package chen.tools.generator;
+package chen.tools.jetbrains.generator;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
@@ -12,11 +12,10 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static chen.tools.generator.CertificateGenerator.CRT_FILE;
-import static chen.tools.generator.CertificateGenerator.JetProfile_CA;
+import static chen.tools.jetbrains.generator.CertificateGenerator.CRT_FILE;
+import static chen.tools.jetbrains.generator.CertificateGenerator.JetProfile_CA;
 
 
 public class ConfigGenerator {

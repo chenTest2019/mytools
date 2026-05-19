@@ -263,9 +263,12 @@ public class CertificateGenerator {
         LocalDate now = LocalDate.now();
 
         X509CertInfo certInfo = new X509CertInfo();
-        certInfo.set(X509CertInfo.VALIDITY, new CertificateValidity(localDateToDate(now), localDateToDate(now.plusYears(10))));
-        certInfo.set(X509CertInfo.KEY, new CertificateX509Key(publicKey));
-        certInfo.set(X509CertInfo.VERSION, new CertificateVersion(CertificateVersion.V3));
+
+        certInfo.setValidity(new CertificateValidity(localDateToDate(now), localDateToDate(now.plusYears(10))));
+        certInfo.setKey( new CertificateX509Key(publicKey));
+        certInfo.setVersion( new CertificateVersion(CertificateVersion.V3));
+
+
 
         //System.out.println(Arrays.toString(Security.getProviders()));
         var bigInteger = new BigInteger(64, new SecureRandom());
@@ -274,15 +277,11 @@ public class CertificateGenerator {
         //var bytes = HexFormat.of().parseHex("65e0dd95");
         //bigInteger=new BigInteger(1,bytes);
 
-        certInfo.set(X509CertInfo.SERIAL_NUMBER, new CertificateSerialNumber(bigInteger));
-        certInfo.set(X509CertInfo.ALGORITHM_ID, new CertificateAlgorithmId(new AlgorithmId(AlgorithmId.SHA256_oid)));
-        certInfo.set(X509CertInfo.SUBJECT, new X500Name("CN=My Self Signed Certificate"));
-        certInfo.set(X509CertInfo.ISSUER, new X500Name("CN=JetProfile CA"));
+        certInfo.setSerialNumber(new CertificateSerialNumber(bigInteger));
+        certInfo.setAlgorithmId(new CertificateAlgorithmId(new AlgorithmId(AlgorithmId.SHA256_oid)));
+        certInfo.setSubject(new X500Name("CN=My Self Signed Certificate"));
+        certInfo.setIssuer( new X500Name("CN=JetProfile CA"));
 
-        X509CertImpl x509Cert = new X509CertImpl(certInfo);
-        // 使用私钥对证书进行签名
-        x509Cert.sign(privateKey, "SHA256withRSA");
-        //x509Cert.set();
-        return x509Cert;
+        return X509CertImpl.newSigned(certInfo, privateKey, "SHA256withRSA");
     }
 }

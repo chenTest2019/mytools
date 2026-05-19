@@ -7,6 +7,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.Certificate;
@@ -161,9 +162,13 @@ public class CertificateGenerator {
             throw new Exception("type error");
         }
 
-        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+        try {
+            Path path = Paths.get(filePath);
+            Files.createDirectories(path.getParent());
+            Files.writeString(path, pemCertBuilder.toString());
+
             // 将PEM格式的证书文本写入文件
-            fos.write(pemCertBuilder.toString().getBytes(StandardCharsets.UTF_8));
+            //fos.write(pemCertBuilder.toString().getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new IOException("Failed to save certificate to PEM file: " + filePath, e);
         }

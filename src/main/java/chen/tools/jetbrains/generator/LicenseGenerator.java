@@ -42,7 +42,7 @@ public class LicenseGenerator {
      * @return
      */
     private static String getLicenseId() {
-        return RandomStringUtils.randomAlphabetic(10).toUpperCase();
+        return RandomStringUtils.secure().nextAlphabetic(10).toUpperCase();
     }
 
     private static License getLicense(String licenseeName, String expireDate) {

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.security.Signature;
@@ -22,7 +23,9 @@ public class LicenseGenerator {
     public static void main(String[] args) throws IOException {
         String basePath = "E:\\ideame";
         var chen = getActiveCode(basePath, "chen", "2060-05-01");
-        Files.writeString(Paths.get(basePath, "idea","activeCode.txt"), chen);
+        Path path = Paths.get(basePath, "idea", "activeCode.txt");
+        Files.createDirectories(path.getParent());
+        Files.writeString(path, chen);
         System.out.println(chen);
     }
     public static String getActiveCode(String basePath, String licenseeName, String expireDate) {

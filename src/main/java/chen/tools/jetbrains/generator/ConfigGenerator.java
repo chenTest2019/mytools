@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -52,7 +53,9 @@ public class ConfigGenerator {
 
             var r =x.modPow(y,publicKey.getModulus());
 
-            var s = Files.readString(Paths.get(path, "idea","config.json"), StandardCharsets.UTF_8);
+            Path idea = Paths.get(path, "idea", "config.json");
+            Files.createDirectories(idea.getParent());
+            var s = Files.readString(idea, StandardCharsets.UTF_8);
             JSONObject allConfig = JSONObject.parseObject(s);
             var bigIntegerConfig = allConfig.getJSONObject("BigIntegerConfig");
             var jsonArray = bigIntegerConfig.getJSONArray("records");
@@ -84,8 +87,7 @@ public class ConfigGenerator {
                 object.put("z", z.toString());
                 object.put("result", r.toString());
                 jsonArray.add(object);
-
-                Files.writeString(Paths.get(path, "idea", "config.json"), allConfig.toString(JSONWriter.Feature.PrettyFormat));
+                Files.writeString(idea, allConfig.toString(JSONWriter.Feature.PrettyFormat));
                 System.out.println("add:\n"+object.toString(JSONWriter.Feature.PrettyFormat));
                 return true;
             }
